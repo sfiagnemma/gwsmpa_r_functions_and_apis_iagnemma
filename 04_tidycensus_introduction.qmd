@@ -234,7 +234,9 @@ myvars <- c(totalpop = "B01003_001",
             originrace_whitealone = "B03002_003",
             education_total = "B06009_001",
             education_bachelors = "B06009_005",
-            education_gradprofess = "B06009_006")
+            education_gradprofess = "B06009_006",
+            age_by_langathome = "B16007_010",
+            total_age_by_langathome = "B16007_008")
 ```
 
 
@@ -301,17 +303,16 @@ names(allcounties_wide)
 
 allcounties_wide <- allcounties_wide %>%
   mutate(
-    pct_born_foreign = round_half_up(natborn_foreign / natborn_total * 100, 2),
     pct_mil_veteran = round_half_up(military_veteran / military_total * 100, 2),
     pct_race_white = round_half_up(originrace_whitealone / originrace_total_all * 100, 2),
     pct_race_nonwhite = 100 - pct_race_white,
     pct_ed_college_all = round_half_up((education_bachelors + education_gradprofess) / education_total * 100, 2),
+    pct_18to64_spanish = round_half_up(age_by_langathome / total_age_by_langathome * 100, 2),
   )
 
 #remove unneeded columns
 allcounties_wide <- allcounties_wide %>%
   select(-natborn_total,
-         -natborn_foreign,
          -education_total,
          -education_bachelors,
          -education_gradprofess,
@@ -327,6 +328,15 @@ allcounties_wide <- allcounties_wide %>%
 # save results for next steps
 saveRDS(allcounties_wide, here("data", "allcounties_wide_demographics.rds"))
 
+
+```
+
+
+
+```{r}
+allcounties_wide %>% 
+  arrange (desc(age_by_langathome)) %>% 
+  head(10)
 
 ```
 
